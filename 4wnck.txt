@@ -1,0 +1,20 @@
+_tsetlocale(LC_ALL, _T(""));
+
+CHAR szBuf[1024];
+			setlocale(LC_ALL, "Korean");
+			::_tscanf_s(_T("%s"), szBuf, (UINT)_countof(szBuf));
+			CString str = szBuf;
+			str.MakeLower();
+			str.Replace(_T("하세요"), _T("하시오"));
+			MessageBox(NULL, str, _T("CSting 연습"), MB_OK);
+			getchar();
+
+_tsetlocale(LC_ALL, _T(""));
+			CRect rect{ 120,60,270,270 };
+			CPoint pt = rect.CenterPoint();
+			_tprintf(_T("사각형 너비: %d,높이%d\n"), rect.Width(), rect.Height());
+			getchar();
+
+CTime time = CTime::GetCurrentTime();
+			CString str = time.FormatGmt(_T("%A, %B, %d, %Y "));
+			_tprintf(_T("%s\n"), (LPCTSTR)str);

@@ -1,0 +1,119 @@
+#include "stdafx.h"
+#include "MetaFileDC.h"
+#include "ChildView.h"
+
+#include <afxtempl.h>                                // 추가부분00
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CChildView
+
+typedef CList<CRect, CRect&> CRectList;              // 추가부분01
+CRectList   m_listCircle;                           // 추가부분 02
+
+CChildView::CChildView()
+{
+ // 확장 메타파일 객체를 생성하고 초기화한다.
+ CMetaFileDC dc;
+ dc.CreateEnhanced(NULL, NULL, NULL, NULL);
+ // GDI 함수를 호출하여 출력한다.
+ dc.Rectangle(0, 0, 10, 10);
+ dc.Ellipse(1, 1, 9, 9);
+ // 확장 메타파일 핸들을 얻는다.
+ m_hmf = dc.CloseEnhanced();
+}
+
+CChildView::~CChildView()
+{
+ // 확장 메타파일을 삭제한다.
+ ::DeleteEnhMetaFile(m_hmf);
+}
+
+
+BEGIN_MESSAGE_MAP(CChildView,CWnd )
+ //{{AFX_MSG_MAP(CChildView)
+ ON_WM_PAINT()
+ ON_WM_LBUTTONDOWN()
+ ON_WM_RBUTTONDOWN()
+ //}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+
+/////////////////////////////////////////////////////////////////////////////
+// CChildView message handlers
+
+BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs)
+{
+ if (!CWnd::PreCreateWindow(cs))
+  return FALSE;
+
+ cs.dwExStyle |= WS_EX_CLIENTEDGE;
+ cs.style &= ~WS_BORDER;
+ cs.lpszClass = AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS,
+  ::LoadCursor(NULL, IDC_ARROW), HBRUSH(COLOR_WINDOW+1), NULL);
+
+ return TRUE;
+}
+
+void CChildView::OnPaint()
+{
+ CPaintDC dc(this); // device context for painting
+ 
+ // TODO: Add your message handler code here
+ 
+ POSITION pos = m_listCircle.GetHeadPosition();   //추가부분03
+    while (pos)                                          //추가부분04
+    {  
+        CRect &rect = m_listCircle.GetNext(pos);  
+  //dc.Ellipse(rect);
+  //dc.Rectangle(rect);
+  dc.PlayMetaFile(m_hmf, &rect);
+    }                                                   //추가부분 04 여기까지임
+
+
+ // Do not call CWnd::OnPaint() for painting messages
+}
+
+void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+ CClientDC dc(this);
+ CRect rect(point.x-20, point.y-20, point.x+20, point.y+20);
+ dc.PlayMetaFile(m_hmf, &rect);
+ m_listCircle.AddTail(rect);                        //추가부분 05
+
+}
+
+void CChildView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+ CClientDC dc(this);
+ CRect rect(point.x-50, point.y-20, point.x+50, point.y+20);
+ dc.PlayMetaFile(m_hmf, &rect);
+ m_listCircle.AddTail(rect);                       //추가부분 06
+
+}
+
+
+
+6주차 
+6번 
+cs.x =100;
+cs.y=200;
+
+
+
+
+
+9번 cs.dwExStyle &= WS_EX_TOPMOST;
+
+
+10번 pFrame->ShowWindow(SW_SHOWMINIMIZED);
+
+
+
+16
+MessageBox(NULL,L"프로그램을 종료합니다.",L"종료",MB_ICONINFORMATION);
+

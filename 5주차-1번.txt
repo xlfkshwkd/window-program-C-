@@ -1,0 +1,16 @@
+CString strColor;
+	Point3DColor() {} // 템플릿 클래스에 사용할 때는 기본 생성자가 필요하다.
+	Point3DColor(int x0, int y0, int z0, CString c) { x = x0; y = y0; z = z0; strColor = c; }
+
+
+	CArray<Point3DColor, Point3DColor&> array;
+			array.SetSize(5);
+			for (int i = 0; i < 5; i++) {
+				Point3DColor pt(i, i * 10, i * 100,_T("RED"));
+				array[i] = pt;
+			}
+			for (int i = 0; i < 5; i++) {
+				Point3DColor pt = array[i];
+				_tprintf(_T("%d, %d, %d %s\n"), pt.x, pt.y, pt.z,pt.strColor);
+			}
+		}
